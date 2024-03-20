@@ -1,4 +1,6 @@
 const express = require("express");
+const orderRoutes = require("./routes/order.routes");
+const restaurantRoutes = require("./routes/restaurant.routes");
 const userRoutes = require("./routes/user.routes");
 require("dotenv").config();
 
@@ -13,7 +15,9 @@ app.get("/api", (req, res) => {
 });
 
 // use all the routes
-app.get("/api", userRoutes);
+app.use("/api", userRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", restaurantRoutes);
 
 app.listen(PORT, () => {
   console.log("listening on port", PORT);
