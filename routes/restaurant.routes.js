@@ -13,13 +13,15 @@ const router = express.Router();
 
 router
   .route("/restaurants")
-  .post(addNewRestaurant)
+  .post(auth, addNewRestaurant)
   .get(getAvailableRestaurants);
 router.route("/restaurants/:id").get(getRestaurantWithID);
 router
   .route("/restaurants/:id/menu")
   .get(getRestaurantMenuWithId)
-  .post(addNewMenuToRestaurantWithId);
-router.route("/restaurants/:restaurantId/menu/:menuId").delete(deleteMenuOfRestaurantWithId);
+  .post(auth, addNewMenuToRestaurantWithId);
+router
+  .route("/restaurants/:restaurantId/menu/:menuId")
+  .delete(auth, deleteMenuOfRestaurantWithId);
 
 module.exports = router;
