@@ -41,7 +41,27 @@ const userLogin = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  const userID = req.params.id;
+  const { currentPassword, newPassword } = req.body;
+  try {
+    const userFound = await User.findById(userID);
+    if (!userFound) throw "User not found";
+
+    const passwordMatch = bcrypt.compare(currentPassword, userFound.password);
+    if (!passwordMatch) throw "Incorrect current password";
+    const hashedPassword = await bcrypt.hash(newPassword, 5);
+    userFound.password = hashedPassword;
+    await userFound.save();
+    
+    res.status(204);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+};
+
 module.exports = {
   userLogin,
   userRegister,
+  resetPassword,
 };
