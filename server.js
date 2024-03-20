@@ -1,4 +1,5 @@
 const express = require("express");
+const connection = require("./connection");
 const orderRoutes = require("./routes/order.routes");
 const restaurantRoutes = require("./routes/restaurant.routes");
 const userRoutes = require("./routes/user.routes");
@@ -19,6 +20,12 @@ app.use("/api", userRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", restaurantRoutes);
 
-app.listen(PORT, () => {
-  console.log("listening on port", PORT);
+app.listen(PORT, async () => {
+  try {
+    await connection;
+    console.log("connected to mongoDB");
+    console.log("listening on port", PORT);
+  } catch (error) {
+    console.error(error);
+  }
 });
