@@ -26,15 +26,15 @@ const userLogin = async (req, res) => {
     const userFound = await User.findOne({ email });
     if (!userFound)
       throw "Email has not been registered. Please register first!";
-    bcrypt.compare(password, userFound.password, (err, result) => {
-      if (err) throw err;
-      if (!result) throw "Invalid credentials!";
-      const accessToken = jwt.sign(
-        { userID: userFound._id },
-        process.env.ACCESS_TOKEN_SECRET
-      );
-      res.status(201).json({ message: "Successfully logged in!", accessToken });
-    });
+
+    const result = await bcrypt.compare(password, userFound.password);
+    if (!result) throw "Invalid credentials!";
+
+    const accessToken = jwt.sign(
+      { userID: userFound._id },
+      process.env.ACCESS_TOKEN_SECRET
+    );
+    res.status(201).json({ message: "Successfully logged in!", accessToken });
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -53,7 +53,7 @@ const resetPassword = async (req, res) => {
     userFound.password = hashedPassword;
     await userFound.save();
 
-    res.status(204);
+    res.status(204).json({ message: "Password successfully updated" });
   } catch (error) {
     res.status(400).json({ error });
   }
