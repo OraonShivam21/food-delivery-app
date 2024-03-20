@@ -14,7 +14,7 @@ const addNewRestaurant = async (req, res) => {
 const getAvailableRestaurants = async (req, res) => {
   try {
     const restaurants = await Restaurant.find();
-    if (restaurants.length < 0) throw "There are no restaurants to show";
+    if (restaurants.length == 0) throw "There are no restaurants to show";
     res.status(200).json({
       message: "This the list of available restaurants",
       available_restaurants: restaurants,
@@ -57,7 +57,7 @@ const addNewMenuToRestaurantWithId = async (req, res) => {
     await restaurantFound.save();
 
     res
-      .status(200)
+      .status(201)
       .json({ message: "Menu item successfully added", data: restaurantFound });
   } catch (error) {
     res.status(400).json({ error });
@@ -74,7 +74,7 @@ const deleteMenuOfRestaurantWithId = async (req, res) => {
       (item) => item._id.toString() !== menuId
     );
     await restaurantFound.save();
-    res.status(202);
+    res.status(202).json({ message: "Menu successfully deleted" });
   } catch (error) {
     res.status(400).json({ message: "Failed to delete menu item", error });
   }

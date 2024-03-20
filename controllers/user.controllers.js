@@ -4,15 +4,14 @@ const User = require("../models/user.models");
 require("dotenv").config();
 
 const userRegister = async (req, res) => {
-  const payload = req.body;
+  const { name, email, password, address } = req.body;
   try {
-    const userEmail = payload.email;
-    const userFound = await User.findOne({ email: userEmail });
+    const userFound = await User.findOne({ email });
     if (userFound)
       throw "User has already been registered. Please proceed to login!";
     bcrypt.hash(password, 5, async (err, hash) => {
       if (err) throw err;
-      const user = new User({ name, email, password: hash });
+      const user = new User({ name, email, password: hash, address });
       await user.save();
       res.status(201).json({ message: "New user has been registered!" });
     });
@@ -53,7 +52,7 @@ const resetPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 5);
     userFound.password = hashedPassword;
     await userFound.save();
-    
+
     res.status(204);
   } catch (error) {
     res.status(400).json({ error });
