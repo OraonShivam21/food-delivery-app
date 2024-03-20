@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: Food Delivery App
+  description: Documentation the Food Delivery App RESTful API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /register:
+    post:
+      summary: Register a new user
+      description: /register endpoint to register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      response:
+        '201':
+          description: New user has been registered
+        '400':
+          description: User has been already registered. Please proceed to login! OR any other error
+  /login:
+    post:
+      summary: Login a user
+      description: /login endpoint to login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              email:
+                type: string
+              password:
+                type: string
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zip:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+    Menu:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        image:
+          type: string
+    Restaurants:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          $ref: "#/components/schemas/Address"
+        menu:
+          type: array
+          items:
+            $ref: "#/components/schemas/Menu"
